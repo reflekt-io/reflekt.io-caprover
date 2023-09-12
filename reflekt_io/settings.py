@@ -12,13 +12,12 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
-import environ
+
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env = environ.Env()
 
 # Quick-start development settings
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -27,27 +26,27 @@ env = environ.Env()
 # SECURITY WARNING: keep the secret key used in production secret!
 # Please set SECRET_KEY environment variable in your production environment
 # (e.g. Heroku).
-SECRET_KEY = env.str('SECRET_KEY', 'django-insecure-)&n4fpdxxruqo49e!gn^^bvr9k726ldxx6k$wwpf)(e(%orpz9')
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-)&n4fpdxxruqo49e!gn^^bvr9k726ldxx6k$wwpf)(e(%orpz9')
 
 # Automatically determine environment by detecting if DATABASE_URL variable.
 # DATABASE_URL is provided by Heroku if a database add-on is added
 # (e.g. Heroku Postgres).
-PRODUCTION = env.bool('PRODUCTION', False)
+PRODUCTION = os.getenv('DATABASE_URL') is not None
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # If you want to enable debugging on Heroku for learning purposes,
 # set this to True.
 
-DEBUG = env.bool('DEBUG', True)
+# DEBUG = not PRODUCTION
+DEBUG = True
 
-APP_NAME = env.str('APP_NAME', '')
+HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME', '')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [f'{HEROKU_APP_NAME}.herokuapp.com']
 
-if PRODUCTION:
-    ALLOWED_HOSTS += [f'{APP_NAME}.pbp.cs.ui.ac.id']
-else:
+if not PRODUCTION:
     ALLOWED_HOSTS += ['.localhost', '127.0.0.1', '[::1]']
+
 
 # Application definition
 
@@ -128,10 +127,10 @@ DATABASES = {
 
 # Set database settings automatically using DATABASE_URL.
 if PRODUCTION:
-    DATABASES = {
-        'default': env.db('DATABASE_URL')
-    }
-    DATABASES["default"]["ATOMIC_REQUESTS"] = True
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600, ssl_require=True
+    )
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
