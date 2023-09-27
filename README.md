@@ -7,7 +7,7 @@ Sebuah tempat baru yang akan menjadi tempat aman untuk merefleksikan diri, berke
 > Proyek ini dibuat untuk memenuhi tugas Proyek Tengah Semester (PTS)
 > pada mata kuliah Pemrograman Berbasis Platform (CSGE602022) yang
 > diselenggarakan oleh Fakultas Ilmu Komputer, Universitas Indonesia
-> pada Semester Gasal, Tahun Ajaran 2021/2022.
+> pada Semester Gasal, Tahun Ajaran 2021/2022. 
 
 ## 🌏 Situs Web 🌎
 
