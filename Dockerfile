@@ -30,3 +30,4 @@ USER django
 
 # Run application
 CMD gunicorn reflekt_io.wsgi:application
+EXPOSE 8000
