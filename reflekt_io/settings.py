@@ -42,12 +42,12 @@ DEBUG = env.bool('DEBUG', True)
 
 APP_NAME = env.str('APP_NAME', '')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-if PRODUCTION:
-    ALLOWED_HOSTS += [f'{APP_NAME}.pbp.cs.ui.ac.id']
-else:
-    ALLOWED_HOSTS += ['.localhost', '127.0.0.1', '[::1]']
+# if PRODUCTION:
+#     ALLOWED_HOSTS += [f'{APP_NAME}.pbp.cs.ui.ac.id']
+# else:
+#     ALLOWED_HOSTS += ['.localhost', '127.0.0.1', '[::1]']
 
 # Application definition
 
