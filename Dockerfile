@@ -29,5 +29,6 @@ RUN chown -R django:django /app
 USER django
 
 # Run application
+CMD python manage.py migrate
 CMD gunicorn reflekt_io.wsgi:application
 EXPOSE 8000
