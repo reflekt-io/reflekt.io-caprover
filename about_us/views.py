@@ -14,10 +14,10 @@ def index(request):
         if form.is_valid():
             form.save()
             data['success'] = True
-            return JsonResponse(data)
         else:
             data['success'] = False
-            return JsonResponse(data)
+            
+        return JsonResponse(data)
     else:
         form = ContactForm()
         return render(request, 'about_us_index.html', {'form':form})
