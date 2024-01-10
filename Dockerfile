@@ -29,4 +29,4 @@ RUN chown -R django:django /app
 USER django
 
 # Run application
-# CMD gunicorn project_name.wsgi:application
+CMD gunicorn reflekt_io.wsgi:application
