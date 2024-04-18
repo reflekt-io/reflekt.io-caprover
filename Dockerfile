@@ -24,6 +24,9 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput --clear
 
+# Database application
+RUN python manage.py migrate --noinput
+
 # Run as non-root user
 RUN chown -R django:django /app
 USER django
