@@ -32,7 +32,7 @@ SECRET_KEY = env.str('SECRET_KEY', 'django-insecure-)&n4fpdxxruqo49e!gn^^bvr9k72
 # Automatically determine environment by detecting if DATABASE_URL variable.
 # DATABASE_URL is provided by Heroku if a database add-on is added
 # (e.g. Heroku Postgres).
-PRODUCTION = env.bool('PRODUCTION', False)
+DB_HOST = env.bool('DB_HOST', False)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # If you want to enable debugging on Heroku for learning purposes,
@@ -127,9 +127,16 @@ DATABASES = {
 }
 
 # Set database settings automatically using DATABASE_URL.
-if PRODUCTION:
+if DB_HOST:
     DATABASES = {
-        'default': env.db('DATABASE_URL')
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env("DB_NAME"),
+            'USER': env("DB_USER"),
+            'PASSWORD': env("DB_PASSWORD"),
+            'HOST': env("DB_HOST"),
+            'PORT': env("DB_PORT"),
+        }
     }
     DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
