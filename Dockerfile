@@ -1,9 +1,10 @@
 FROM python:3.10-slim-buster
 
-WORKDIR /app
+# Should be in the root path, otherwise it can't load environment variables
+WORKDIR /
 
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app \
+    PYTHONPATH=/ \
     DJANGO_SETTINGS_MODULE=reflekt_io.settings \
     PORT=8000 \
     WEB_CONCURRENCY=2
@@ -28,7 +29,7 @@ RUN python manage.py collectstatic --noinput --clear
 RUN python manage.py migrate --noinput
 
 # Run as non-root user
-RUN chown -R django:django /app
+RUN chown -R django:django /
 USER django
 
 # Run application
