@@ -39,10 +39,16 @@ RUN pip install -r /requirements.txt
 # Copy project code
 COPY . .
 
-RUN python manage.py collectstatic --noinput --clear
+# You should create a shell script and run this command as a CMD line in your dockerfile, not RUN.
+# https://github.com/caprover/caprover/issues/88
 
-# Database application
-RUN python manage.py migrate --noinput
+# RUN python manage.py collectstatic --noinput --clear
+
+# # Database application
+# RUN python manage.py migrate --noinput
+
+COPY entrypoint.sh /usr/local/bin/
+ENTRYPOINT [ "entrypoint.sh", "docker-django-entrypoint" ]
 
 # Run as non-root user
 RUN chown -R django:django /app
