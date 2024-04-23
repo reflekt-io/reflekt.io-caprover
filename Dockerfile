@@ -1,58 +1,26 @@
 FROM python:3.10-slim-buster
 
-# Should be in the root path, otherwise it can't load environment variables
-WORKDIR /app
-
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app \
-    DJANGO_SETTINGS_MODULE=reflekt_io.settings \
-    PORT=8000 \
-    WEB_CONCURRENCY=2
-
-# Install system packages required Django.
-RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
- && rm -rf /var/lib/apt/lists/*
-
-RUN addgroup --system django \
-    && adduser --system --ingroup django django
-
-# Call env
-ARG DB_NAME=${DB_NAME}
-ENV DB_NAME=${DB_NAME}
-
-ARG DB_USER=${DB_USER}
-ENV DB_USER=${DB_USER}
-
-ARG DB_PASSWORD=${DB_PASSWORD}
-ENV DB_PASSWORD=${DB_PASSWORD}
-
-ARG DB_HOST=${DB_HOST}
-ENV DB_HOST=${DB_HOST}
-
-ARG DB_PORT=${DB_PORT}
-ENV DB_PORT=${DB_PORT}
-
-# Requirements are installed here to ensure they will be cached.
+RUN apt-get update \
+    # dependencies for building Python packages
+    && apt-get install -y build-essential \
+    # psycopg2 dependencies
+    && apt-get install -y libpq-dev \
+    # Translations dependencies
+    && apt-get install -y gettext \
+    && apt-get install -y libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info \
+    # cleaning up unused files
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/*
+ 
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+ 
 COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
-
-# Copy project code
-COPY . .
-
-# You should create a shell script and run this command as a CMD line in your dockerfile, not RUN.
-# https://github.com/caprover/caprover/issues/88
-
-# RUN python manage.py collectstatic --noinput --clear
-
-# # Database application
-# RUN python manage.py migrate --noinput
-
-COPY entrypoint.sh /usr/local/bin/
-ENTRYPOINT [ "entrypoint.sh", "docker-django-entrypoint" ]
-
-# Run as non-root user
-RUN chown -R django:django /app
-USER django
-
-# Run application
-CMD gunicorn reflekt_io.wsgi:application
+RUN pip install --no-cache-dir -r /requirements.txt \
+    && rm -rf /requirements.txt
+ 
+COPY . /usr/src/app
+ 
+EXPOSE 80
+ 
+CMD ["sh", "./runserver.sh"]
