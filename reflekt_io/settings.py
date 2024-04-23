@@ -134,18 +134,6 @@ WSGI_APPLICATION = 'reflekt_io.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env("DB_NAME"),
-        'USER': env("DB_USER"),
-        'PASSWORD': env("DB_PASSWORD"),
-        'HOST': env("DB_HOST"),
-        'PORT': env("DB_PORT"),
-    }
-}
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
-
 # Set database settings automatically using DATABASE_URL.
 if DB_HOST:
     DATABASES = {
