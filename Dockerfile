@@ -1,22 +1,17 @@
 FROM python:3.10-slim-buster
 
-RUN apt-get update \
-    # dependencies for building Python packages
-    && apt-get install -y build-essential \
-    # psycopg2 dependencies
-    && apt-get install -y libpq-dev \
-    # cleaning up unused files
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-    && rm -rf /var/lib/apt/lists/*
- 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+# Install required system packages.
+RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
+&& rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /app
+WORKDIR /app
  
 COPY ./requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt \
     && rm -rf /requirements.txt
  
-COPY . /usr/src/app
+COPY . /app
  
 EXPOSE 80
  
