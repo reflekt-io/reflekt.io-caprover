@@ -4,8 +4,8 @@ FROM python:3.10-slim-buster
 RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
 && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir -p /app
+WORKDIR /app
  
 COPY ./requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt \
