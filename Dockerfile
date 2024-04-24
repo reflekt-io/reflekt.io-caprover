@@ -15,4 +15,4 @@ COPY . /app
  
 EXPOSE 80
  
-CMD ["sh", "./runserver.sh"]
+CMD ["sh", "runserver.sh"]
